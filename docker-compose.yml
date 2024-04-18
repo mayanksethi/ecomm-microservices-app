@@ -1,0 +1,27 @@
+version: "3"
+services:
+  inventory:
+    build: ./InventoryService
+    ports:
+      - 4000:4000
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017
+      ORDER_URL: http://order:4001/order 
+  order:
+    build: ./OrderService
+    ports:
+      - 4001:4001
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017
+      PRODUCT_URL: http://inventory:4000/product
+  user:
+    build: ./UserService
+    ports:
+      - 4002:4002
+    environment:
+      MONGODB_URL: mongodb://mongodb:27017
+      ORDER_URL: http://order:4001/order
+      PRODUCT_URL: http://inventory:4000/product
+  mongodb:
+    image: 'mongo:5.0'
+    command: mongod --quiet --logpath /dev/null
